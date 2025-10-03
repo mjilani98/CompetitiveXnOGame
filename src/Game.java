@@ -29,7 +29,6 @@ public class Game
     private int size;
     private Board board;
     
-    
     //public constructor
     public Game(int size)
     {
@@ -51,30 +50,128 @@ public class Game
     	{
     		//take player mover
     		board = playerMove(board);
-    		displayScores(board);
+    		
     	}
+    	
+    	
+    	
     }
     
     
+	//method displays players scores
+	private void displayScores(Board board)
+	{
+		int computerScore = calculateScore(board,COMPUTER); //getting computer score
+		int playerScore = calculateScore(board,PLAYER);		//getting player score
+		
+		System.out.println("Score of X = " + computerScore);
+		System.out.println("Score of O = " + playerScore);
+	}
+	
+	//method calculates score for a passed player
+	private int calculateScore(Board board,char symbol)
+	{
+		int score = 0 ; //player score
+		
+		//checks rows , calculating scores for each row
+		for(int x = 0 ; x < size ; x++)
+			score += checkRow(board , x , symbol);
+		
+		
+		//check columns , calculating scores for each column
+		for(int y = 0 ; y < size ; y++ )
+			score += calculateColumn(board, y , symbol);
+		
+		
+		return score;
+	}
+	
+	//method calculates scores of a column
+	private int calculateColumn(Board board, int y, char symbol)
+	{
+		int twoCount = 0 ; 		//two consecutive pieces
+		int threeCount = 0 ;	//three consecutive pieces
+		int counter = 0 ;		
+		
+		for(int j = 0 ; j < size ; j++)
+		{
+			if(board.array[j][y] == symbol)		//if current slot matches passed symbol
+			{
+				counter +=1;
+			}
+			else								
+			{
+				counter = 0;					//reset the counter 
+			}
+			
+			if(counter == 2)					//increment number of two consecutive pieces
+				twoCount +=1;
+			
+			if(counter == 3)					//increment number of three consecutive pieces
+			{
+				threeCount +=1;
+				twoCount +=1;					//also add another two consecutive pieces
+			}
+		}
+		
+		int score = (2 * twoCount) + (3 * threeCount); //score = 2p + 3q
 
-    //method lets the player to make a move
+		return score;		//return score
+	}
+	
+	private int checkRow(Board board, int x , char symbol)
+	{
+		int twoCount = 0 ;						//two consecutive pieces
+		int threeCount = 0 ;					//three consecutive pieces
+		int counter = 0 ;
+		
+		for(int y = 0 ; y < size ; y++)
+		{
+			if(board.array[x][y]== symbol)
+			{
+				counter +=1;
+			}
+			else
+			{
+				counter = 0;
+			}
+			
+			if(counter == 2)
+				twoCount +=1;
+			
+			if(counter == 3)
+			{
+				threeCount +=1;
+				twoCount +=1;
+			}
+		}
+		
+		int score = (2 * twoCount) + (3 * threeCount);
+		
+		return score;
+	}
+	
+	
+	//method lets the player to make a move
 	private Board playerMove(Board board)
 	{
 		System.out.print("Player move: ");         //prompt player
 		
 		Scanner scanner = new Scanner(System.in);  //read player's move
-        int i = scanner.nextInt();
-        int j = scanner.nextInt();
+        int x = scanner.nextInt();
+        int y = scanner.nextInt();
         
-        board.array[i][j] = PLAYER;                //place player symbol
+        board.array[x][y] = PLAYER;                //place player symbol
         
-        displayBoard(board);                       //diplay board
+        displayBoard(board);                       //display board
+        
+        displayScores(board);					   //display scores
 
         return board;                              //return updated board
 
 		
 	}
-
+	
 	//method display a board
 	private void displayBoard(Board board) 
 	{
@@ -113,11 +210,7 @@ public class Game
 	    System.out.println();
 		
 	}
-
-	//method displays players scores
-	private void displayScores(Board board)
-	{
-		
-	}
+	
+	
 	
 }
