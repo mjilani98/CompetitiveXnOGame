@@ -75,7 +75,7 @@ public class Game
 		
 		//checks rows , calculating scores for each row
 		for(int x = 0 ; x < size ; x++)
-			score += checkRow(board , x , symbol);
+			score += calculateRow(board , x , symbol);
 		
 		
 		//check columns , calculating scores for each column
@@ -119,7 +119,8 @@ public class Game
 		return score;		//return score
 	}
 	
-	private int checkRow(Board board, int x , char symbol)
+	//method calculates scores of a row
+	private int calculateRow(Board board, int x , char symbol)
 	{
 		int twoCount = 0 ;						//two consecutive pieces
 		int threeCount = 0 ;					//three consecutive pieces
@@ -127,30 +128,29 @@ public class Game
 		
 		for(int y = 0 ; y < size ; y++)
 		{
-			if(board.array[x][y]== symbol)
+			if(board.array[x][y]== symbol)		//if current slot matches passed symbol
 			{
 				counter +=1;
 			}
 			else
 			{
-				counter = 0;
+				counter = 0;					//reset the counter
 			}
 			
 			if(counter == 2)
-				twoCount +=1;
+				twoCount +=1;					//increment number of two consecutive pieces
 			
 			if(counter == 3)
 			{
-				threeCount +=1;
-				twoCount +=1;
+				threeCount +=1;					//increment number of three consecutive pieces
+				twoCount +=1;					//also add another two consecutive pieces
 			}
 		}
 		
-		int score = (2 * twoCount) + (3 * threeCount);
+		int score = (2 * twoCount) + (3 * threeCount); //score = 2p + 3q
 		
-		return score;
+		return score;		//return score
 	}
-	
 	
 	//method lets the player to make a move
 	private Board playerMove(Board board)
